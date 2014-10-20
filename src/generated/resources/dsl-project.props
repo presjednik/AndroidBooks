@@ -1,0 +1,7 @@
+# This configuration file is used for Boostrap initialization.
+# These settings can only be used for this project, so do not reuse this file elsewhere.
+#
+username=examples@dslplatform.com
+project-id=35d1c85f-a4f6-4bdf-b255-724216d5a6f3
+api-url=https://node0.dsl-platform.com/beta_a7897aec5442f284d30f64/
+package-name=model.android
