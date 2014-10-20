@@ -1,4 +1,4 @@
-package model.android;
+package com.dslplatform.examples.android;
 
 import java.util.*;
 import java.math.BigDecimal;

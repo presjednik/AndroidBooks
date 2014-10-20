@@ -1,11 +1,15 @@
-package model.android;
+package com.dslplatform.examples.android;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
 import java.io.IOException;
+
+import com.dslplatform.examples.android.R;
+
 import org.slf4j.Logger;
+
 import com.dslplatform.client.Bootstrap;
 import com.dslplatform.patterns.ServiceLocator;
 
