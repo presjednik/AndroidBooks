@@ -25,22 +25,21 @@ public class DatabaseTest extends TestCase {
 			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel",
 					"trace");
 			locator = Bootstrap.init(DatabaseTest.class
-					.getResourceAsStream("/dsl-project.ini"));
+					.getResourceAsStream("/dsl-project.props"));
 			locator.resolve(Logger.class).info("Locator has been initialized.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("setUp");
-
 	}
 
 	public void testMethodDatabase() {
 		System.out.println("testMethodDatabsase");
 		try {
-
+			
 			Log.d("DELETE", "Deleting all books!");
 			//deletes all the books we already have
-			for (Book b : Book.search()) {
+			for (Book b : Book.search(locator)) {
 				b.delete();
 			}
 
