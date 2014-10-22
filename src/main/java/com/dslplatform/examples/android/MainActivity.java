@@ -1,9 +1,18 @@
 package com.dslplatform.examples.android;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
+import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,33 +27,34 @@ import com.dslplatform.client.Bootstrap;
 import com.dslplatform.patterns.ServiceLocator;
 
 public class MainActivity extends Activity {
-	
+
 	public static ServiceLocator locator;
 	private ListView listView;
+	private SearchView searchView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		listView = (ListView) findViewById(R.id.list_books);
-		
+
 		try {
 			locator = init();
-			
-			//get all books from the database
+
+			// get all books from the database
 			final List<Book> bookList = Book.search();
 			final BookArrayAdapter bookAdapter = new BookArrayAdapter(this,
-			R.layout.book_layout, bookList);
+					R.layout.book_layout, bookList);
 			listView.setAdapter(bookAdapter);
 			listView.setTextFilterEnabled(true);
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-    
-    /**
+
+	/**
 	 * Call to initialize an instance of ServiceLocator with a dsl-project.props
 	 */
 	public static ServiceLocator init() throws IOException {
@@ -57,9 +67,32 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.search:
+			onSearchRequested();
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	@Override
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		final MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			MenuItem searchItem = menu.findItem(R.id.search);
+			searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+			searchView.setSearchableInfo(searchManager
+					.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(false);
+		} else {
+			Log.d("OLDER THAN HONEYCOMB",
+					"Android version is older than Honeycomb");
+		}
 		return true;
 	}
 
