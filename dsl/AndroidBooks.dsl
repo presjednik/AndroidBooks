@@ -29,4 +29,10 @@ module AndroidBooks
         String comment;
         String reviewdBy;
     }
+
+	report AuthorsBookCount
+	{
+		String author;
+		count<Book> BookCount 'b => b.authors.Any(a => a.Equals(author))';
+	}
 }
