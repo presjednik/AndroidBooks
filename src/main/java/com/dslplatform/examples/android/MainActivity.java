@@ -1,29 +1,32 @@
 package com.dslplatform.examples.android;
 
-import android.os.Build;
-import android.os.Bundle;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.slf4j.Logger;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import java.io.IOException;
-import java.util.List;
-
-import com.dslplatform.examples.android.R;
+import com.dslplatform.client.Bootstrap;
 import com.dslplatform.examples.android.AndroidBooks.Book;
 import com.dslplatform.examples.android.utilities.BookArrayAdapter;
-
-import org.slf4j.Logger;
-
-import com.dslplatform.client.Bootstrap;
+import com.dslplatform.examples.android.utilities.ReviewUtility;
 import com.dslplatform.patterns.ServiceLocator;
 
 public class MainActivity extends Activity {
@@ -48,8 +51,26 @@ public class MainActivity extends Activity {
 			listView.setAdapter(bookAdapter);
 			listView.setTextFilterEnabled(true);
 
+			// adding a OnItemClickListener to call the function
+			// for displaying reviews for the book
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// get the clicked book
+					final Book book = (Book) parent.getAdapter().getItem(
+							position);
+					try {
+						// call the method which displays the AlertDialog with
+						// the reviews
+						ReviewUtility.showReviewsForBook(book.getIsbn(),
+								MainActivity.this);
+					} catch (InterruptedException | ExecutionException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

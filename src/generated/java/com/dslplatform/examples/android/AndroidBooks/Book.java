@@ -539,6 +539,93 @@ public class Book implements java.io.Serializable,
 
     }
 
+    public static class isbnEquals implements
+            com.dslplatform.patterns.Specification<Book>, java.io.Serializable {
+        public isbnEquals(
+                final String isbn) {
+            setIsbn(isbn);
+        }
+
+        public isbnEquals() {
+            this.isbn = "";
+        }
+
+        public java.util.List<Book> search() throws java.io.IOException {
+            return search(null, null,
+                    com.dslplatform.client.Bootstrap.getLocator());
+        }
+
+        public java.util.List<Book> search(
+                final com.dslplatform.patterns.ServiceLocator locator)
+                throws java.io.IOException {
+            return search(null, null, locator);
+        }
+
+        public java.util.List<Book> search(
+                final Integer limit,
+                final Integer offset) throws java.io.IOException {
+            return search(limit, offset,
+                    com.dslplatform.client.Bootstrap.getLocator());
+        }
+
+        public java.util.List<Book> search(
+                final Integer limit,
+                final Integer offset,
+                final com.dslplatform.patterns.ServiceLocator locator)
+                throws java.io.IOException {
+            try {
+                return (locator != null
+                        ? locator
+                        : com.dslplatform.client.Bootstrap.getLocator())
+                        .resolve(com.dslplatform.client.DomainProxy.class)
+                        .search(this, limit, offset, null).get();
+            } catch (final InterruptedException e) {
+                throw new java.io.IOException(e);
+            } catch (final java.util.concurrent.ExecutionException e) {
+                throw new java.io.IOException(e);
+            }
+        }
+
+        public long count() throws java.io.IOException {
+            return count(com.dslplatform.client.Bootstrap.getLocator());
+        }
+
+        public long count(final com.dslplatform.patterns.ServiceLocator locator)
+                throws java.io.IOException {
+            try {
+                return (locator != null
+                        ? locator
+                        : com.dslplatform.client.Bootstrap.getLocator())
+                        .resolve(com.dslplatform.client.DomainProxy.class)
+                        .count(this).get().longValue();
+            } catch (final InterruptedException e) {
+                throw new java.io.IOException(e);
+            } catch (final java.util.concurrent.ExecutionException e) {
+                throw new java.io.IOException(e);
+            }
+        }
+
+        private static final long serialVersionUID = 0x0097000a;
+
+        private String isbn;
+
+        @com.fasterxml.jackson.annotation.JsonProperty("isbn")
+        @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY)
+        public String getIsbn() {
+            return isbn;
+        }
+
+        public isbnEquals setIsbn(final String value) {
+            if (value == null)
+                throw new IllegalArgumentException(
+                        "Property \"isbn\" cannot be null!");
+            this.isbn = value;
+
+            return this;
+        }
+
+    }
+
     public Book(
             final String isbn,
             final String title,

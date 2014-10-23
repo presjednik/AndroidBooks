@@ -11,10 +11,15 @@ module AndroidBooks
         Date publishedOn;
         Int pages;
         
-         specification searchBooks 'b => b.isbn.Contains(pattern) || b.title.ToLower().Contains(pattern)
+        specification searchBooks 'b => b.isbn.Contains(pattern) || b.title.ToLower().Contains(pattern)
 							|| b.authors.Any(a => a.ToLower().Contains(pattern))'
 				{
 					String pattern;
+				}
+		
+		specification isbnEquals 'b => b.isbn.Equals(isbn)'
+				{
+					String isbn;
 				}
     }
 
